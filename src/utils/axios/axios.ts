@@ -4,9 +4,10 @@ import { auth } from "../auth";
 console.log(process.env.NEXT_PUBLIC_BASE_URL )
 // Create an Axios instance
 const axiosClient = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/",// Replace with your API URL
+    baseURL: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/api/",// Replace with your API URL
     headers: {
         "Content-Type": "application/json",
+        // Authorization: `Bearer ${auth()?.token || ""}`, // Use auth token if available
     },
 });
 
@@ -23,7 +24,6 @@ axiosClient.interceptors.response.use(
         console.error("Response Error:", error.response);
         if (error.response?.status === 401) {
             console.log("Unauthorized! Redirecting to login...");
-            window.location.href = "/login"; // Example: Redirect user on 401
         }
         return Promise.reject(error);
     }

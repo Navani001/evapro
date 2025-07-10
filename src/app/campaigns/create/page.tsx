@@ -1,9 +1,9 @@
 import { auth } from "@/utils";
 import { redirect } from "next/navigation";
 import { DashboardLayout } from "@/component";
-import DashboardContent from "@/component/dashboard/DashboardContent";
+import { CampaignCreator } from "@/component/campaign/CampaignCreator";
 
-export default async function Home() {
+export default async function CampaignCreationPage() {
   const data: any = await auth();
   
   // Redirect to login if not authenticated
@@ -13,7 +13,7 @@ export default async function Home() {
 
   return (
     <DashboardLayout user={data.user}>
-      <DashboardContent />
+      <CampaignCreator token={data.user.token} brandId={1} />
     </DashboardLayout>
   );
 }

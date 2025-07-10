@@ -1,17 +1,15 @@
 /* globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.mapboxgl-ctrl-logo {
-    @apply hidden;
-    display: hidden;    
-}
-a.mapboxgl-ctrl-logo {
-    display: hidden !important;
+@layer base {
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
 }
 
-/* Styled Scrollbar */
 .scrollbar-custom::-webkit-scrollbar {
     width: 5px;
 }
@@ -28,4 +26,92 @@ a.mapboxgl-ctrl-logo {
 
 .scrollbar-custom::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.glass-morphism {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Floating animation for login elements */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.float-animation {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Custom input focus styles */
+.custom-input:focus {
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    border-color: rgb(99, 102, 241);
+}
+
+/* Template Creator Animations */
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+}
+
+.animate-slide-up {
+    animation: slide-up 0.4s ease-out;
+}
+
+.animate-scale-in {
+    animation: scale-in 0.2s ease-out;
+}
+
+.shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* Card hover effects */
+.card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Phone preview enhancements */
+.phone-glow {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+}
+
+/* Progress bar custom styles */
+.progress-glow {
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
 }

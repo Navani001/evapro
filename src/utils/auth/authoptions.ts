@@ -11,6 +11,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { JWT } from "next-auth/jwt";
 import { postRequest } from "../axios/axios";
 const authOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [ GoogleProvider({
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -23,20 +24,22 @@ const authOptions = {
       id: "credentials",
       name: "Credentials",
       authorize: async (credentials) => {
-        try {
+        // try {
         
-        let data:any=await postRequest("/api/auth/credential",{email:credentials.username,password:credentials.password})
-        let user=data.data;
-        user=data.data
-          user.id=user.user.id
-          user.logo = user.user.logo;
-        user.name = user.user.name;
-        user.email = user.user.email;
-          return user ?user : null;
-        } catch (error) {
-          console.error("Error during authentication", error);
-          return null;
-        }
+        // let data:any=await postRequest("/api/auth/credential",{email:credentials.username,password:credentials.password})
+        // let user=data.data;
+        // user=data.data
+        //   user.id=user.user.id
+        //   user.logo = user.user.logo;
+        // user.name = user.user.name;
+        // user.email = user.user.email;
+        //   return user ?user : null;
+        // } catch (error) {
+        //   console.error("Error during authentication", error);
+        //   return null;
+        // }
+        console.log("Credentials:", credentials)
+        return null
       },
     }),
    
@@ -46,21 +49,23 @@ const authOptions = {
   if (account?.provider === "google") {
     try {
       
-      const data:any = await postRequest("/api/auth/fetchUserDetails", { email: user.email });
-      // console.log("Data ",data);
+      const data:any = await postRequest("auth/fetchUserDetails", { email: user.email });
+      console.log("Data from axios ",data);
       // This is where the issue is. Your API returns user data nested in data.data.user
       // But you're not accessing the right structure when assigning properties
       // Fix: Access correct structure and assign properly
       if (data.data && data.data.user){
         user.id = data.data.user.id;
-        user.logo = data.data.user.logo;
-        user.name = data.data.user.name;
+        user.id = data.data.user.brand_id;
+        user.logo = data.data.user.logo_url;
+        user.name = data.data.user.display_name;
         user.email = data.data.user.email;
         user.role=data.data.user.role;
-        user.token = data.data.token; // Make sure the token is assigned to the user object
-       
+        user.token = data.data.token;   
       }
-      
+      console.log(data)
+      console.log(user)
+
       return true;
     } catch (error) {
       console.error("Error during Google sign in:", error);
@@ -72,7 +77,7 @@ const authOptions = {
 },
   async jwt({ token, user }:any) {
   if (user) {
-    // console.log("User in JWT callback:", user);
+    console.log("User in JWT callback:", user);
     
     token.id = user.id;
     token.logo = user.logo;
@@ -83,14 +88,14 @@ const authOptions = {
     // Make sure to grab the token from the user object
     token.token = user.token; 
     
-    // console.log("Token after JWT callback:", token);
+    console.log("Token after JWT callback:", token);
   }
   return token;
 }
 ,
     
  async session({ session, token }: { session: any; token: JWT }) {
-  // console.log("Token in session callback:", token);
+  console.log("Token in session callback:", token);
 
   session.user = {
     id: token.id,
@@ -101,7 +106,7 @@ const authOptions = {
     token: token.token, // Ensure access token is correctly mapped
   };
 
-  // console.log("Session after session callback:", session);
+  console.log("Session after session callback:", session);
 
   return session;
 }
@@ -112,5 +117,5 @@ const authOptions = {
     strategy: "jwt",
   },
 } satisfies NextAuthConfig;
-
+ 
 export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);

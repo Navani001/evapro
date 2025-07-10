@@ -1,9 +1,10 @@
 
 "use client"
-import { GoogleSign, Login, SignIn, SignOut } from "@/component";
+import { Login } from "@/component";
 export default function LoginPage() {
-    return <div className={` flex items-center justify-center bg-[url("https://c0.wallpaperflare.com/preview/198/135/731/cyber-attack-abstract-access.jpg")] bg-cover bg-no-repeat  h-screen`}>
-        {/* <SignIn/><GoogleSign /><SignOut/> */}
-        <Login/>
-    </div>;
+    return (
+        <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 font-inter">
+            <Login/>
+        </div>
+    );
 }

@@ -22,8 +22,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Crimex",
-  description: "crimex crime spot application",
+  title: "Rcs Platform",
+  description: "Rcs Platform application",
 };
 
 export default function RootLayout({

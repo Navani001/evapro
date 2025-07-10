@@ -20,17 +20,6 @@ export function SignIn() {
                 password,
                 redirectTo:"/"
             })
-                .then(result => {
-                    if (result?.error) {
-                        setError(result.error)
-                    } else {
-                        window.location.href = "/"
-                    }
-                })
-                .catch(err => {
-                    console.error("Error during sign in:", err)
-                    setError("Failed to sign in")
-                })
         } catch (error) {
             // handle error state here
             console.error("Error during sign-in", error);
