@@ -80,7 +80,7 @@ export const DashboardContent = () => {
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Create Campaign</h3>
           <p className="text-gray-600 mb-4">Design and launch new RCS messaging campaigns to engage your customers with rich, interactive content.</p>
-          <Button className="bg-primary-600 text-white hover:bg-primary-700 transition-colors w-full">
+          <Button className="bg-primary-700 text-white hover:bg-primary-700 transition-colors w-full">
             New Campaign
           </Button>
         </div>

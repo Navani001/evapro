@@ -209,6 +209,12 @@ export const DataTable: React.FC<DataTableProps> = ({
             )}
           </div>
         );
+      case 'start_time':
+        return (
+          <div className="max-w-xs">
+            {value ? new Date(value).toLocaleString() : 'Not set'}
+          </div>
+        );
       
       case 'variables':
         const variableCount = value ? Object.keys(value).length : 0;

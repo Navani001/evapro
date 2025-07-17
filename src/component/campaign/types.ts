@@ -27,6 +27,7 @@ export interface CampaignCreateData {
   name: string;
   campaign_type: string;
   targets: number[];
+  start_time: string;
 }
 
 export interface User {

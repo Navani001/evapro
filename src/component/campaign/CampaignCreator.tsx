@@ -13,7 +13,8 @@ import {
   Checkbox,
   Divider,
   Progress,
-  Badge
+  Badge,
+  DatePicker
 } from "@heroui/react";
 import { 
   MdSend, 
@@ -52,7 +53,8 @@ export const CampaignCreator: React.FC<CampaignCreatorProps> = ({
     template_id: 0,
     name: "",
     campaign_type: "",
-    targets: []
+    targets: [],
+    start_time: ""
   });
 
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -67,12 +69,13 @@ export const CampaignCreator: React.FC<CampaignCreatorProps> = ({
   // Calculate completion percentage
   const getCompletionPercentage = () => {
     let completed = 0;
-    const total = 4;
+    const total = 5;
 
     if (campaign.name.trim()) completed++;
     if (campaign.campaign_type) completed++;
     if (campaign.template_id > 0) completed++;
     if (campaign.targets.length > 0) completed++;
+    if (campaign.start_time) completed++;
 
     return Math.round((completed / total) * 100);
   };
@@ -168,8 +171,29 @@ export const CampaignCreator: React.FC<CampaignCreatorProps> = ({
     }));
   };
 
+  // Validate campaign data
+  const validateCampaign = () => {
+    if (!campaign.start_time) return { isValid: false, error: "Start time is required" };
+    
+    const startTime = new Date(campaign.start_time);
+    const now = new Date();
+    
+    if (startTime < now) {
+      return { isValid: false, error: "Start time must be in the future" };
+    }
+    
+    return { isValid: true, error: null };
+  };
+
   // Handle save campaign
   const handleSave = async () => {
+    const validation = validateCampaign();
+    if (!validation.isValid) {
+      console.error("Validation failed:", validation.error);
+      // You might want to show a toast notification here
+      return;
+    }
+
     setIsSaving(true);
     try {
       console.log("Creating campaign:", campaign);
@@ -292,6 +316,24 @@ export const CampaignCreator: React.FC<CampaignCreatorProps> = ({
                       </SelectItem>
                     ))}
                   </Select>
+                </div>
+                
+                <div className="grid grid-cols-1 gap-4">
+                  <Input
+                    type="datetime-local"
+                    label="Start Time"
+                    value={campaign.start_time}
+                    onValueChange={(value) => setCampaign(prev => ({ ...prev, start_time: value }))}
+                    variant="bordered"
+                    placeholder="1"
+                    isRequired
+                    min={new Date().toISOString().slice(0, 16)}
+                    endContent={campaign.start_time && <MdCheckCircle className="text-green-500" />}
+                    classNames={{
+                      label:"text-black"
+                    }}
+                    description="Select when the campaign should start sending messages"
+                  />
                 </div>
               </CardBody>
             </Card>

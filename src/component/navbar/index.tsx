@@ -43,16 +43,16 @@ const navigationItems = [
     href: "/audience",
     icon: MdGroup,
   },
-  {
-    name: "Brand Management",
-    href: "/brands",
-    icon: MdBusinessCenter,
-  },
-  {
-    name: "Settings",
-    href: "/settings",
-    icon: MdSettings,
-  },
+  // {
+  //   name: "Brand Management",
+  //   href: "/brands",
+  //   icon: MdBusinessCenter,
+  // },
+  // {
+  //   name: "Settings",
+  //   href: "/settings",
+  //   icon: MdSettings,
+  // },
 ];
 
 export const Navbar = () => {
@@ -74,12 +74,12 @@ export const Navbar = () => {
                   flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
                   ${
                     isActive
-                      ? "bg-primary-600 text-gray-700 border-r-2 border-primary-600"
+                      ? "bg-blue-50 text-blue-700 border-r-2 border-blue-600"
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                   }
                 `}
               >
-                <Icon className={`text-lg ${isActive ? "text-gray-700" : "text-gray-400"}`} />
+                <Icon className={`text-lg ${isActive ? "text-blue-600" : "text-gray-400"}`} />
                 {item.name}
               </Link>
             );
@@ -94,14 +94,14 @@ export const Navbar = () => {
           <div className="space-y-2">
             <Link
               href="/campaigns/create"
-              className="flex items-center gap-2 px-3 py-2 text-sm text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+              className="flex items-center gap-2 px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
             >
               <MdCampaign className="text-lg" />
               New Campaign
             </Link>
             <Link
               href="/templates/create"
-              className="flex items-center gap-2 px-3 py-2 text-sm text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+              className="flex items-center gap-2 px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
             >
               <MdMessage className="text-lg" />
               Create Template

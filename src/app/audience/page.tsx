@@ -1,28 +1,22 @@
-"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { Card, CardBody, CardHeader, Breadcrumbs, BreadcrumbItem } from '@heroui/react';
-import { Users, ArrowLeft, Building, User } from 'lucide-react';
-import Link from 'next/link';
+import React from 'react';
+import { redirect } from 'next/navigation';
+import { Users} from 'lucide-react';
+
 import { DashboardLayout } from '@/component';
 import { CustomersContent } from '@/component/customer';
+import { auth } from '@/utils';
 
-interface BrandInfo {
-  id: number;
-  name: string;
-  display_name: string | null;
-}
 
-interface AgentInfo {
-  id: number;
-  name: string;
-  display_name: string | null;
-}
-
-const AudiencePage: React.FC = () => {
+const AudiencePage: React.FC = async () => {
   const brandId = "1" as string;
   const agentId = "2" as string;
+ const data: any = await auth();
+  
+  // Redirect to login if not authenticated
+  if (!data?.user) {
+    redirect("/login");
+  }
 
  
   return (
@@ -63,8 +57,8 @@ const AudiencePage: React.FC = () => {
               </div>
             </div>
           </div>
-          
-          <CustomersContent brandId={brandId} agentId={agentId} />
+
+          <CustomersContent brandId={brandId} agentId={agentId} token={data.user.token } />
         </div>
       </div>
     </DashboardLayout>

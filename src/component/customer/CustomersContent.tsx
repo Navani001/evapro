@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import axios, { AxiosResponse } from "axios";
 import { 
   Button, 
   Input, 
@@ -23,16 +24,232 @@ import {
   CreateUserData,
   subscriptionStatuses 
 } from './types';
-import { AudienceService } from '@/utils/audienceAPI';
+import { deleteRequest, getRequest, postRequest } from '@/utils';
+
+// Axios setup
+
+// Response Interceptor
+
+
+
+
+// API Response interface
+interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
+interface AudienceResponse {
+  users: AudienceUser[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+// API Service Functions
+const AudienceService = {
+  baseUrl: 'userSub',
+
+  async createUser(
+    brandId: string, 
+    agentId: string, 
+    userData: CreateUserData,
+    token: string
+  ): Promise<ApiResponse<AudienceUser>> {
+    try {
+      const response = await postRequest<any>(
+        `${this.baseUrl}/add`,
+        {
+          ...userData
+        }, {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+      );
+      
+      // Extract the actual data from the axios response
+      const responseData = response.data || response;
+      return responseData as ApiResponse<AudienceUser>;
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw error;
+    }
+  },
+
+  async getUsers(
+    brandId: string,
+    agentId: string,
+      filters: AudienceFilters = {},
+    token: string
+  ): Promise<ApiResponse<AudienceResponse>> {
+    try {
+      const params = new URLSearchParams();
+      
+      if (filters.page) params.append('page', filters.page.toString());
+      if (filters.limit) params.append('limit', filters.limit.toString());
+      if (filters.status) params.append('status', filters.status);
+      if (filters.search) params.append('search', filters.search);
+
+      const url = `${this.baseUrl}/brand/${brandId}${
+        params.toString() ? `?${params.toString()}` : ''
+      }`;
+      
+
+      const response = await getRequest<any>(url, {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      });
+
+      // Extract the actual data from the axios response
+      const responseData = response.data || response;
+      
+      // Debug logging to understand the structure
+      console.log('Response data:', responseData);
+      
+      // Check if we have subscriptions directly in responseData
+      if (!responseData || !responseData.subscriptions) {
+        console.warn('No subscriptions found in response:', responseData);
+        return {
+          success: true,
+          message: 'No subscriptions found',
+          data: {
+            users: [],
+            pagination: {
+              page: 1,
+              limit: 10,
+              total: 0,
+              totalPages: 0
+            }
+          }
+        };
+      }
+      
+      // Transform the subscriptions data to match expected AudienceUser format
+      const users = responseData.subscriptions.map((subscription: any) => ({
+        id: subscription.user.id,
+        name: subscription.user.name,
+        phone_number: subscription.user.phone_number,
+        country_code: subscription.user.country_code,
+        created_at: subscription.user.created_at,
+        updated_at: subscription.user.updated_at,
+        subscriptions: [{
+          id: subscription.id,
+          status: subscription.status,
+          subscribed_at: subscription.subscribed_at,
+          unsubscribed_at: subscription.unsubscribed_at,
+          brand: subscription.brand,
+          agent: subscription.agent
+        }],
+        _count: {
+          messages: 0 // You might want to add this to your backend response
+        }
+      }));
+
+      const transformedResponse: ApiResponse<AudienceResponse> = {
+        success: true,
+        message: 'Subscriptions retrieved successfully',
+        data: {
+          users: users,
+          pagination: {
+            page: responseData.page,
+            limit: responseData.limit,
+            total: responseData.total,
+            totalPages: Math.ceil(responseData.total / responseData.limit)
+          }
+        }
+      };
+
+      return transformedResponse;
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      throw error;
+    }
+  },
+
+  async deleteUser(userId: string, token: string): Promise<ApiResponse<null>> {
+    try {
+      const response = await deleteRequest<any>(
+        `${this.baseUrl}/${userId}`,
+        {},
+        {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      );
+      
+      // Extract the actual data from the axios response
+      const responseData = response.data || response;
+      return responseData as ApiResponse<null>;
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      throw error;
+    }
+  },
+
+  async unsubscribeUser(
+    brandId: string,
+    agentId: string,
+    userId: string,
+    token: string
+  ): Promise<ApiResponse<any>> {
+    try {
+      const response = await postRequest<any>(
+        `${this.baseUrl}/${userId}/unsubscribe`,
+        {},
+        {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      );
+      
+      // Extract the actual data from the axios response
+      const responseData = response.data || response;
+      return responseData as ApiResponse<any>;
+    } catch (error) {
+      console.error('Error unsubscribing user:', error);
+      throw error;
+    }
+  },
+
+  async exportUsers(
+    brandId: string,
+    agentId: string,
+    format: 'csv' | 'xlsx' = 'csv',
+    token: string
+  ): Promise<Blob> {
+    try {
+      const response = await getRequest<any>(
+        `${this.baseUrl}/brand/${brandId}/agent/${agentId}/export?format=${format}`,
+        {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      );
+      
+      // For blob responses, we might need to handle differently
+      // This depends on how your backend sends the file
+      return (response.data || response) as unknown as Blob;
+    } catch (error) {
+      console.error('Error exporting users:', error);
+      throw error;
+    }
+  }
+};
 
 interface CustomersContentProps {
   brandId: string;
   agentId: string;
+  token: string;
 }
 
 const CustomersContent: React.FC<CustomersContentProps> = ({
   brandId,
-  agentId
+  agentId,
+  token
 }) => {
   const [customers, setCustomers] = useState<AudienceUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,7 +282,7 @@ const CustomersContent: React.FC<CustomersContentProps> = ({
   const fetchCustomers = async (currentFilters: AudienceFilters) => {
     setIsLoading(true);
     try {
-      const response = await AudienceService.getUsers(brandId, agentId, currentFilters);
+      const response = await AudienceService.getUsers(brandId, agentId, currentFilters, token);
       if (response.success) {
         setCustomers(response.data.users);
         setPagination(response.data.pagination);
@@ -110,7 +327,7 @@ const CustomersContent: React.FC<CustomersContentProps> = ({
   const handleCreateCustomer = async (data: CreateUserData) => {
     setIsCreating(true);
     try {
-      const response = await AudienceService.createUser(brandId, agentId, data);
+      const response = await AudienceService.createUser(brandId, agentId, data,token);
       if (response.success) {
         // Refresh customers list
         await fetchCustomers(filters);
@@ -143,7 +360,7 @@ const CustomersContent: React.FC<CustomersContentProps> = ({
 
   const handleExport = async () => {
     try {
-      const blob = await AudienceService.exportUsers(brandId, agentId, 'csv');
+      const blob = await AudienceService.exportUsers(brandId, agentId, 'csv', token);
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -165,7 +382,7 @@ const CustomersContent: React.FC<CustomersContentProps> = ({
   const handleDeleteCustomer = async (customer: AudienceUser) => {
     if (confirm(`Are you sure you want to delete ${customer.name}?`)) {
       try {
-        await AudienceService.deleteUser(customer.id.toString());
+        await AudienceService.deleteUser(customer.id.toString(), token);
         await fetchCustomers(filters); // Refresh list
       } catch (error) {
         console.error('Error deleting customer:', error);
@@ -176,7 +393,7 @@ const CustomersContent: React.FC<CustomersContentProps> = ({
   const handleUnsubscribeCustomer = async (customer: AudienceUser) => {
     if (confirm(`Are you sure you want to unsubscribe ${customer.name}?`)) {
       try {
-        await AudienceService.unsubscribeUser(brandId, agentId, customer.id.toString());
+        await AudienceService.unsubscribeUser(brandId, agentId, customer.id.toString(), token);
         await fetchCustomers(filters); // Refresh list
       } catch (error) {
         console.error('Error unsubscribing customer:', error);

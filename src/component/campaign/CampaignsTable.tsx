@@ -110,8 +110,12 @@ export const CampaignsTable: React.FC<CampaignsTableProps> = ({ token, brandId =
         </Chip>
       )
     },
-    { key: "_count", label: "Performance", sortable: false },
-    { key: "updated_at", label: "Last Updated", sortable: true },
+    { key: "_count", label: "Performance", sortable: false
+     },
+    { key: "start_time", label: "Start Date", sortable: true,
+       render: (time: any) => (
+        <div>{time}</div>
+      ),     },
     { key: "actions", label: "Actions", sortable: false }
   ];
 
