@@ -23,21 +23,21 @@ const navigationItems = [
     href: "/campaigns",
     icon: MdCampaign,
   },
-  {
-    name: "Messages",
-    href: "/messages",
-    icon: MdMessage,
-  },
+  // {
+  //   name: "Messages",
+  //   href: "/messages",
+  //   icon: MdMessage,
+  // },
   {
     name: "Templates",
     href: "/templates",
     icon: MdMessage,
   },
-  {
-    name: "Analytics",
-    href: "/analytics",
-    icon: MdAnalytics,
-  },
+  // {
+  //   name: "Analytics",
+  //   href: "/analytics",
+  //   icon: MdAnalytics,
+  // },
   {
     name: "Audience",
     href: "/audience",
