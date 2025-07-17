@@ -93,7 +93,7 @@ export const Navbar = () => {
           </h3>
           <div className="space-y-2">
             <Link
-              href="/campaigns/new"
+              href="/campaigns/create"
               className="flex items-center gap-2 px-3 py-2 text-sm text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
             >
               <MdCampaign className="text-lg" />

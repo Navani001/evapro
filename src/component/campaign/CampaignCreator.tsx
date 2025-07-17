@@ -114,18 +114,20 @@ export const CampaignCreator: React.FC<CampaignCreatorProps> = ({
         console.log("Fetched user subscriptions:", response.data);
         
         const data = response.data as any;
-        if (data?.success && data?.data?.subscriptions) {
+        if (data?.subscriptions) {
+
           // Transform subscription data to user format
-          const users = data.data.subscriptions
-            .filter((sub: any) => sub.status === 'subscribed') // Only subscribed users
-            .map((sub: any) => ({
-              id: sub.user.id,
-              name: sub.user.name || `User ${sub.user.id}`,
-              email: sub.user.email || '',
-              phone: `${sub.user.country_code}${sub.user.phone_number}`,
-              status: sub.status
-            }));
+          const users = data.subscriptions
+          .filter((sub: any) => sub.status === 'subscribed') // Only subscribed users
+          .map((sub: any) => ({
+            id: sub.user.id,
+            name: sub.user.name || `User ${sub.user.id}`,
+            email: sub.user.email || '',
+            phone: `${sub.user.country_code}${sub.user.phone_number}`,
+            status: sub.status
+          }));
           
+          console.log("subed users",users)
           setUsers(users);
         }
         setLoadingUsers(false);
@@ -251,14 +253,14 @@ export const CampaignCreator: React.FC<CampaignCreatorProps> = ({
           {/* Left Side - Campaign Details */}
           <div className="lg:col-span-2 space-y-6">
             {/* Campaign Basic Info */}
-            <Card className="shadow-sm border border-gray-200/50">
+            <Card className="shadow-sm border border-gray-200/50 bg-white">
               <CardHeader className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
                 <div className="flex items-center gap-2">
                   <MdInfo className="text-blue-200" />
                   <h3 className="text-xl font-semibold">Campaign Information</h3>
                 </div>
               </CardHeader>
-              <CardBody className="space-y-4">
+              <CardBody className="space-y-4 ">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
                     label="Campaign Name"
@@ -268,6 +270,9 @@ export const CampaignCreator: React.FC<CampaignCreatorProps> = ({
                     variant="bordered"
                     isRequired
                     endContent={campaign.name && <MdCheckCircle className="text-green-500" />}
+                    classNames={{
+                      label:"text-black"
+                    }}
                   />
                   
                   <Select
@@ -292,7 +297,7 @@ export const CampaignCreator: React.FC<CampaignCreatorProps> = ({
             </Card>
 
             {/* Template Selection */}
-            <Card className="shadow-sm border border-gray-200/50">
+            <Card className="shadow-sm border border-gray-200/50 bg-white">
               <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-600 text-white">
                 <div className="flex items-center gap-2">
                   <MdDescription className="text-green-200" />
@@ -346,7 +351,7 @@ export const CampaignCreator: React.FC<CampaignCreatorProps> = ({
             </Card>
 
             {/* Target Audience */}
-            <Card className="shadow-sm border border-gray-200/50">
+            <Card className="shadow-sm border border-gray-200/50 bg-white">
               <CardHeader className="bg-gradient-to-r from-purple-500 to-violet-600 text-white">
                 <div className="flex items-center justify-between w-full">
                   <div className="flex items-center gap-2">
@@ -362,15 +367,21 @@ export const CampaignCreator: React.FC<CampaignCreatorProps> = ({
                 {loadingUsers ? (
                   <div className="text-center py-4">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mx-auto"></div>
-                    <p className="text-gray-500 mt-2">Loading users...</p>
+                    <p className="text-black mt-2">Loading users...</p>
                   </div>
                 ) : (
                   <>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between text-black">
                       <Checkbox
                         isSelected={campaign.targets.length === users.length}
                         isIndeterminate={campaign.targets.length > 0 && campaign.targets.length < users.length}
                         onValueChange={handleSelectAllUsers}
+                        classNames={
+
+                        {
+                          label:"text-black"
+                        }
+                        }
                       >
                         Select All ({users.length} users)
                       </Checkbox>
@@ -408,7 +419,7 @@ export const CampaignCreator: React.FC<CampaignCreatorProps> = ({
           {/* Right Side - Campaign Summary */}
           <div className="lg:col-span-1">
             <div className="sticky top-32">
-              <Card className="shadow-lg border border-gray-200/50">
+              <Card className="shadow-lg border bg-white border-gray-200/50">
                 <CardHeader className="bg-gradient-to-r from-gray-800 to-gray-900 text-white">
                   <h3 className="text-lg font-semibold">Campaign Summary</h3>
                 </CardHeader>
@@ -416,24 +427,24 @@ export const CampaignCreator: React.FC<CampaignCreatorProps> = ({
                   <div className="space-y-3">
                     <div>
                       <p className="text-xs text-gray-500 uppercase">Campaign Name</p>
-                      <p className="text-sm font-medium">{campaign.name || "Not set"}</p>
+                      <p className="text-sm font-medium text-gray-700">{campaign.name || "Not set"}</p>
                     </div>
                     
                     <div>
                       <p className="text-xs text-gray-500 uppercase">Type</p>
-                      <p className="text-sm font-medium">{campaign.campaign_type || "Not selected"}</p>
+                      <p className="text-sm font-medium text-gray-700">{campaign.campaign_type || "Not selected"}</p>
                     </div>
                     
                     <div>
                       <p className="text-xs text-gray-500 uppercase">Template</p>
-                      <p className="text-sm font-medium">
+                      <p className="text-sm font-medium text-gray-700">
                         {selectedTemplate ? selectedTemplate.name || `Template ${selectedTemplate.id}` : "Not selected"}
                       </p>
                     </div>
                     
                     <div>
                       <p className="text-xs text-gray-500 uppercase">Target Audience</p>
-                      <p className="text-sm font-medium">{campaign.targets.length} users selected</p>
+                      <p className="text-sm font-medium text-gray-700">{campaign.targets.length} users selected</p>
                     </div>
                   </div>
                   

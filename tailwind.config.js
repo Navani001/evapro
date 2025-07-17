@@ -7,6 +7,7 @@ module.exports = {
     './src/**/*.{js,ts,jsx,tsx,mdx}',
     "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
+  darkMode: 'class', // Enable class-based dark mode
  theme: {
 		extend: {
 			colors: {
@@ -171,7 +172,6 @@ module.exports = {
 			},
 		},
 	},
-	darkMode: 'class',
 	plugins: [
 		heroui({
 			prefix: 'core', // prefix for themes variables

@@ -34,15 +34,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="dark"
-      style={{ colorScheme: 'dark' }}
-      className={`${poppins.variable} ${geistSans.variable} ${geistMono.variable}`}
+      data-theme="light"
+      style={{ colorScheme: 'light' }}
+      className={`light ${poppins.variable} ${geistSans.variable} ${geistMono.variable}`}
     >
       <head>
         <link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet" />
       </head>
-      <body className="antialiased">
-        <Providers>{children}</Providers>
+      <body className="antialiased light" data-theme="light">
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

@@ -15,16 +15,41 @@
 }
 
 .scrollbar-custom::-webkit-scrollbar-track {
-    background: #2c2c2e;
+    background: #f1f1f1;
     border-radius: 10px;
 }
 
 .scrollbar-custom::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #c1c1c1;
     border-radius: 10px;
 }
 
 .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Theme-aware scrollbar styles */
+[data-theme="light"] .scrollbar-custom::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+[data-theme="light"] .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+}
+
+[data-theme="light"] .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+[data-theme="dark"] .scrollbar-custom::-webkit-scrollbar-track {
+    background: #2c2c2e;
+}
+
+[data-theme="dark"] .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+[data-theme="dark"] .scrollbar-custom::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
 
@@ -114,4 +139,120 @@
 /* Progress bar custom styles */
 .progress-glow {
     box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+/* Force light theme for HeroUI components */
+html[data-theme="light"],
+.light {
+  color-scheme: light !important;
+}
+
+/* Complete override for all HeroUI components */
+.light *,
+[data-theme="light"] * {
+  background-color: white !important;
+  color: #111827 !important;
+}
+
+/* Reset specific HeroUI component backgrounds */
+.light [data-slot="base"],
+.light [data-slot="wrapper"],
+.light [data-slot="table"],
+.light [data-slot="thead"],
+.light [data-slot="tbody"],
+.light [data-slot="tr"],
+.light [data-slot="th"],
+.light [data-slot="td"] {
+  background-color: white !important;
+  color: #111827 !important;
+}
+
+/* Table header styling */
+.light [data-slot="column-header"],
+.light th {
+  background-color: #f9fafb !important;
+  color: #374151 !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* Table cell styling */
+.light [data-slot="cell"],
+.light td {
+  background-color: white !important;
+  color: #111827 !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* Card specific overrides */
+.light [data-slot="base"][class*="card"],
+.light .heroui-card {
+  background-color: white !important;
+  border: 1px solid #e5e7eb !important;
+  color: #111827 !important;
+}
+
+/* Input field overrides */
+.light [data-slot="base"][class*="input"],
+.light .heroui-input {
+  background-color: white !important;
+}
+
+.light [data-slot="input-wrapper"] {
+  background-color: white !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.light [data-slot="input"],
+.light input {
+  background-color: white !important;
+  color: #111827 !important;
+}
+
+/* Button overrides */
+.light [data-slot="base"][class*="button"],
+.light .heroui-button {
+  background-color: white !important;
+  color: #374151 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+/* Dropdown and select overrides */
+.light [data-slot="base"][class*="dropdown"],
+.light .heroui-dropdown,
+.light [data-slot="base"][class*="select"],
+.light .heroui-select {
+  background-color: white !important;
+  border: 1px solid #e5e7eb !important;
+  color: #111827 !important;
+}
+
+/* Modal overrides */
+.light [data-slot="base"][class*="modal"],
+.light .heroui-modal {
+  background-color: white !important;
+  color: #111827 !important;
+}
+
+/* Ensure text is always dark in light theme */
+.light span,
+.light p,
+.light div,
+.light h1,
+.light h2,
+.light h3,
+.light h4,
+.light h5,
+.light h6 {
+  color: #111827 !important;
+}
+
+/* Override any remaining dark backgrounds */
+.light .bg-black,
+.light .bg-gray-900,
+.light .bg-gray-800 {
+  background-color: white !important;
+}
+
+.light .text-white {
+  color: #111827 !important;
 }
