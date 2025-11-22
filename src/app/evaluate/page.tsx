@@ -12,7 +12,7 @@ export default function EvaluationPage() {
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
-            setFiles(prevFiles => [...prevFiles, ...Array.from(event.target.files)]);
+            setFiles(prevFiles => [...prevFiles, ...Array.from(event.target.files!)]);
             event.target.value = ''; // Clear input to allow re-uploading same file
         }
     };
