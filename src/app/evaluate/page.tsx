@@ -111,7 +111,17 @@ export default function EvaluationDashboard() {
     // Handle file selection
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setFiles(Array.from(e.target.files));
+            const selectedFiles = Array.from(e.target.files);
+            const pdfFiles = selectedFiles.filter(file => file.type === 'application/pdf');
+
+            if (selectedFiles.length !== pdfFiles.length) {
+                alert('Only PDF files are allowed. Non-PDF files have been filtered out.');
+                setError('Only PDF files are allowed.');
+            } else {
+                setError(null);
+            }
+
+            setFiles(pdfFiles);
         }
     };
 
@@ -125,8 +135,25 @@ export default function EvaluationDashboard() {
 
     // API Call Function
     const handleEvaluate = async () => {
+        // Validation with alerts
         if (files.length === 0) {
-            setError("Please upload at least one file.");
+            alert("Please upload at least one PDF file before running evaluation.");
+            setError("Please upload at least one PDF file.");
+            return;
+        }
+
+        if (!rubric.trim()) {
+            alert("Please define a rubric before running evaluation.");
+            setError("Please define a rubric.");
+            return;
+        }
+
+        // Validate JSON format
+        try {
+            JSON.parse(rubric);
+        } catch {
+            alert("Invalid rubric format. Please provide valid JSON.");
+            setError("Invalid rubric format. Please provide valid JSON.");
             return;
         }
 
@@ -201,14 +228,14 @@ export default function EvaluationDashboard() {
                                     onChange={handleFileChange}
                                     className="hidden"
                                     id="file-upload"
-                                    accept=".pdf,.docx,.txt,.png,.jpg"
+                                    accept=".pdf"
                                 />
                                 <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
                                     <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mb-3">
                                         <Upload size={24} />
                                     </div>
                                     <span className="text-sm font-medium text-indigo-600 hover:underline">Click to upload files</span>
-                                    <span className="text-xs text-slate-400 mt-1">PDF, DOCX, PNG (Max 10MB)</span>
+                                    <span className="text-xs text-slate-400 mt-1">PDF files only (Max 10MB)</span>
                                 </label>
                             </div>
 
