@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.2",
+    "@heroicons/react": "^2.2.0",
     "@heroui/react": "^2.7.5",
     "@heroui/theme": "2.4.12",
     "@nanostores/react": "github:ai/react",
